@@ -2,6 +2,9 @@
 
 """A simple tone-matrix note player"""
 
+import microbit
+
+
 # PLATFORM SPEC
 # This code will eventually run on a Raspberry Pi.
 # Initial version will probably run (with text trace, not sound) on Mac for testing
