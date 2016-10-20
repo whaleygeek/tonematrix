@@ -2,9 +2,9 @@
 #
 # The interface to a canvas of micro:bit devices
 
-import time
 ##import microbit #will auto connect?
 
+#TODO: Add parser exceptions for invalid data received
 
 #----- MESSAGE RECEPTION ------------------------------------------------------
 
@@ -17,39 +17,64 @@ def poll_message():
     #       return None
 
 def decode_and_handle(msg):
-    pass # TODO
-    # decode and handle message
-    #   strip out first char, this is the command
-    #   dispatch command to appropriate handler
-    #   if T send to handle_bpm_change
-    #   if S send to handle_size_change
-    #   if C send to handle_state_change
-    #   anything else, warning, and drop
-    # return return result of called function to allow a rec to be passed back
+    # First char is cmd, rest is data
+    #TODO:parser exception
+    cmdchar = msg[0]
+    comma   = msg[1]
+    data    = msg[2:]
+
+    if comma != ',':
+        print("warning: malformed message:%s" % msg)
+        return None
+
+    if cmdchar == 'T': # timing change
+        return handle_bpm_change(data)
+
+    elif cmdchar == 'S': # size change
+        return handle_size_change(data)
+
+    elif cmdchar == 'C': # state change
+        return handle_state_change(data)
+
+    else:
+        print("warning: unknown command received:%s" % msg)
+        return None
 
 def handle_bpm_change(msg):
-    pass # TODO
     # time change handler
-    #   T,NNN
+    #   [T,]NNN
     #   (note, no ack)
-    # change bpm variable
+
+    #TODO: parser exception
+    bpm = int(msg)
+
+    return ("BPM", bpm)
 
 def handle_size_change(msg):
-    pass # TODO
     # size change handler
-    #   S,NN,NN
+    #   [S,]NN,NN
     #   (note, no ack)
-    # change num_cols and num_rows
-    # init present_col to zero
-    # resync timer
+
+    fields = msg.split(',')
+    cols, rows = fields #TODO: number of params exception
+
+    return ("SIZE", cols, rows)
 
 def handle_state_change(msg):
-    pass # TODO
     #  state change handler
-    #   C,{0-8},{0-8},(1,0) ### Why single digit when others are double digit??
-    #   send ack: A,{0-8},{0-8},(1,0)
-    # matrix[col][row] = state
-    # just return this as a rec, process will pass up to main driver to action
+    #   [C,]{0-8},{0-8},(1,0) #NOTE: Why single digit when others are double digit??
+
+    fields = msg.split(',')
+    col, row, state = fields #TODO: number of params exception
+    #TODO: parse exception
+    col   = int(col)
+    row   = int(row)
+    state = int(state)
+
+    ack_msg = get_ack_state_change_msg(col, row, state)
+    send_msg(ack_msg)
+
+    return ("STATE", col, row, state)
 
 
 #----- MESSAGE TRANSMISSION ---------------------------------------------------
@@ -57,28 +82,28 @@ def handle_state_change(msg):
 def get_beat_command_msg(idx):
     # form beat command
     #   B,NN
-    pass #TODO
+    return "B,%02d" % idx
 
-def get_ack_state_change_msg(col, row):
+def get_ack_state_change_msg(col, row, state):
     # form ack state change command
     #   A,NN,NN,N
-    pass # TODO
+    return "A,%02d,%02d,%1d" % (col, row, state)
 
 def send_msg(msg):
-    pass #TODO: Knit up to microbit.send()
+    print("send_msg:%s" % str(msg))
+    #TODO: Knit up to microbit.send()
 
 def send_sync_beat(col):
-    now = time.time()
-    print("BEAT %d" % now) #TODO
     msg = get_beat_command_msg(col)
     send_msg(msg)
 
 def process():
     """Poll and process one message"""
-    msg = poll_message()
-    if msg != None:
-        decode_and_handle(msg)
+    req = poll_message()
+    rsp = None
+    if req != None:
+        rsp = decode_and_handle(req)
 
-    #TODO: If it is a matrix reconfig, return rec(col, row, state)
+    return rsp
 
 # END

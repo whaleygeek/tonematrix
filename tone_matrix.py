@@ -2,7 +2,7 @@
 #
 # The main application of the tone matrix demonstration
 
-##import user_interface
+import user_interface
 import matrix
 import tones
 
@@ -24,8 +24,7 @@ def main():
     while True:
         # maintain timing
         if timer.check():
-            print("BEAT")
-            ## user_interface.send_sync_beat()
+            user_interface.send_sync_beat(matrix.get_index())
             chord = matrix.get_next_chord()
             tones.play_chord(chord)
 
@@ -50,6 +49,12 @@ def main():
                 print("STATE:change:%s" % str(change_rec))
                 cmd, col, row, state = change_rec
                 matrix.set_note(col, row, state)
+
+            elif cmd == "SIZE":
+                # change num_cols and num_rows
+                # init present_col to zero
+                # resync timer
+                pass # TODO
 
             else:
                 print("warning: unhandled cmd:%s" % str(change_rec))

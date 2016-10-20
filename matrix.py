@@ -45,6 +45,10 @@ present_col = 0
 ##            pass # TODO
 
 
+def get_index():
+    return present_col
+
+
 def get_next_chord():
     global present_col
     # Try to minimise the computation by returning memoized patterns
