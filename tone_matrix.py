@@ -12,10 +12,13 @@ DEFAULT_BPM  = 120 # must be longer than the longest note, to prevent glitching
 
 bpm          = DEFAULT_BPM
 timer        = Timer(60.0/bpm)
+colidx       = 0
 
+scale = ['C', 'C#', 'D', 'D#', 'E', 'F#', 'G', 'G#', 'A', 'A#', 'B', 'C']
+tones.set_scale(scale)
 
 def main():
-    global bpm
+    global bpm, colidx
 
     # start beat timer
     timer.sync()
@@ -24,13 +27,14 @@ def main():
     while True:
         # maintain timing
         if timer.check():
-            user_interface.send_sync_beat(matrix.get_index())
-            chord = matrix.get_next_chord()
-            tones.play_chord(chord)
+            user_interface.send_sync_beat(colidx)
+            fingering_mask = matrix.get_fingering(colidx)
+
+            tones.play_chord(scale, fingering_mask)
+            colidx = matrix.next_index(colidx)
 
         # process incoming and outgoing messages from/to the user interface
-        ## change_rec = user_interface.process()
-        change_rec = None #TESTING
+        change_rec = user_interface.process()
 
         # action any matrix reconfiguration messages or time change messages
         if change_rec != None:

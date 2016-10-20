@@ -21,44 +21,21 @@ matrix = [ [0 for i in range(MAX_ROWS)] for j in range(MAX_COLS) ]
 
 num_cols    = DEFAULT_COLS
 num_rows    = DEFAULT_ROWS
-present_col = 0
-
-##def set_note(col, row, state):
-##    pass # TODO set note at col,row to state (on or off)
-##    #TODO re-calculate the tone pattern for that column, for fast playback later
-##    #Note, would be good to be able to cache actual note references in tone.py
-##    #on a change, so it doesn't have to keep recalculating from a list of strings
-##    #each time round the loop
 
 
-#----- NOTE GENERATION --------------------------------------------------------
+#----- ACTIONS ----------------------------------------------------------------
 
-##def play_notes(idx):
-##    col_data = matrix[idx]
-##
-##    # trigger all notes to play simultaneously
-##    # all positions that are set to 1, play that note
-##    #TODO: Check in reality, whether pygame.mixer plays a chord or an arpeggio?
-##    for i in range(len(notes)):
-##        if col_data[i] == 1:
-##            #notes[i].play()
-##            pass # TODO
+def change_size(cols, rows):
+    pass # TODO
 
+def set_note(col, row, state):
+    matrix[col][row] = state
 
-def get_index():
-    return present_col
+def get_fingering(col):
+    return matrix[col]
 
-
-def get_next_chord():
-    global present_col
-    # Try to minimise the computation by returning memoized patterns
-    # if the pattern has not changed since last time.
-
-    chord = ['A','D','E'] #TESTING
-
-    present_col = (present_col + 1) % num_cols
-
-    return chord
+def next_index(col):
+    return (col + 1) % num_cols
 
 
 #----- MAIN -------------------------------------------------------------------
