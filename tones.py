@@ -91,7 +91,7 @@ if __name__ == "__main__":
     while True:
         if timer.check():
             play_chord(sequence[i])
-            i = (i + 1) % len(sequence) 
+            i = (i + 1) % len(sequence)
 
 # END
 
