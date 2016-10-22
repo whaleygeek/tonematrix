@@ -33,8 +33,8 @@ colidx       = 0
 
 matrix.change_size(MATRIX_COLS, MATRIX_ROWS)
 matrix.clear()
-matrix.set_col(0, [0,1])
-matrix.set_col(2, [0,2,4])
+##matrix.set_col(0, [0,1])
+##matrix.set_col(2, [0,2,4])
 
 
 #----- MAIN -------------------------------------------------------------------
@@ -68,7 +68,7 @@ def main():
                 print("BPM:change:%s" % str(change_rec))
                 cmd, new_bpm = change_rec
                 bpm = new_bpm
-                timer.config(bpm)
+                timer.config(60.0/bpm)
                 timer.sync()
 
             elif cmd == "STATE":

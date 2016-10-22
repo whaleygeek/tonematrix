@@ -6,14 +6,35 @@
 
 #TODO: Add parser exceptions for invalid data received
 
+import time
+
 #----- DUMMY MICROBIT ---------------------------------------------------------
 
 class DummyMicrobit():
     def __init__(self):
-        pass
+        self.testdata = [
+            # time offset in seconds, command
+            (5, "C,0,0,1"),
+            (5, "C,0,2,1"),
+            (5, "C,0,4,1"),
+            (6, "T,240")
+        ]
+        self.start_time = time.time()
+        self.next_test_idx = 0
 
     def get_next_message(self):
-        return None # TODO
+        if self.next_test_idx < len(self.testdata):
+            # There are still tests to run
+            time_offset, msg = self.testdata[self.next_test_idx]
+            target_time = self.start_time + time_offset
+            now = time.time()
+
+            if now >= target_time:
+                # Advance to next test
+                self.next_test_idx += 1
+                return msg # message will be processed
+
+        return None # No message
 
     def send_message(self, message):
         print("to_microbit:%s" % str(message))
