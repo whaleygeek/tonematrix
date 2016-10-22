@@ -82,7 +82,7 @@ def decode_and_handle(msg): # TESTED OK
         print("warning: unknown command received:%s" % msg)
         return None
 
-def handle_bpm_change(msg):
+def handle_bpm_change(msg): # TESTED OK
     # time change handler
     #   [T,]NNN
     #   (note, no ack)
@@ -92,7 +92,7 @@ def handle_bpm_change(msg):
 
     return ("BPM", bpm)
 
-def handle_size_change(msg):
+def handle_size_change(msg): # TESTED OK
     # size change handler
     #   [S,]NN,NN
     #   (note, no ack)
@@ -104,7 +104,7 @@ def handle_size_change(msg):
 
     return ("SIZE", cols, rows)
 
-def handle_state_change(msg):
+def handle_state_change(msg): # TESTED OK
     #  state change handler
     #   [C,]{0-8},{0-8},(1,0)
 
@@ -123,24 +123,24 @@ def handle_state_change(msg):
 
 #----- MESSAGE TRANSMISSION ---------------------------------------------------
 
-def get_beat_command_msg(idx):
+def get_beat_command_msg(idx): # TESTED OK
     # form beat command
     #   B,NN
     return "B,%d" % idx
 
-def get_ack_state_change_msg(col, row, state):
+def get_ack_state_change_msg(col, row, state): # TESTED OK
     # form ack state change command
     #   A,NN,NN,N
     return "A,%d,%d,%d" % (col, row, state)
 
-def send_msg(msg):
+def send_msg(msg): # TESTED OK
     microbit.send_message(msg)
 
-def send_sync_beat(col):
+def send_sync_beat(col): # TESTED OK
     msg = get_beat_command_msg(col)
     send_msg(msg)
 
-def process():
+def process(): # TESTED OK
     """Poll and process one message"""
     req = poll_message()
     rsp = None
