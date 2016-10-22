@@ -19,14 +19,11 @@ colidx       = 0
 scale = ['C','D','E','F','G','A','B']
 tones.set_scale(scale)
 
-# first col test data
-matrix.set_cell(0,0,1)
-matrix.set_cell(0,1,1)
+#TESTDATA
 
-# third col test data
-matrix.set_cell(2,0,1)
-matrix.set_cell(2,2,1)
-matrix.set_cell(2,4,1)
+matrix.clear()
+matrix.set_col(0, [0,1])
+matrix.set_col(2, [0,2,4])
 
 def main():
     global bpm, colidx

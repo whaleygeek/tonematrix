@@ -46,6 +46,19 @@ def get_fingering(col):
 def next_index(col):
     return (col + 1) % num_cols
 
+def clear():
+    for i in range(len(matrix)):
+        for j in range(len(matrix[i])):
+            matrix[i][j] = 0
+
+def set_col(col, data):
+    # overlay data, may be partial, incuding None for 'no change' placeholders
+    for r in range(len(data)):
+        s = data[r]
+        if s != None:
+            matrix[col][r] = 1
+
+
 
 #----- MAIN -------------------------------------------------------------------
 
