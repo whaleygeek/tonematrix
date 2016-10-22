@@ -55,7 +55,7 @@ def set_col(col, data):
     # overlay data, may be partial, incuding None for 'no change' placeholders
     for r in range(len(data)):
         s = data[r]
-        if s != None:
+        if s is not None and s == 1:
             matrix[col][r] = 1
 
 

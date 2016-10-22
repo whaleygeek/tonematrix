@@ -51,15 +51,12 @@ class PygameTone():
         """Get the longest length of any note/wav file"""
         return self.max_length
 
-    def play_chord(self, chord):
-        # Memoise a set of note instances references for this chord pattern
-        if not chord in self.chords:
-            sounds = []
-            for note in chord:
-                sounds.append(self.notes[note])
-            self.chords.append(sounds)
-        else:
-            sounds = self.chords[chord]
+    def play_chord(self, fingering):
+        print(fingering)
+        sounds = []
+        for ni in range(len(fingering)):
+            if fingering[ni] == 1:
+                sounds.append(self.notes[ni])
 
         # Play the required chord pattern
         for note in sounds:
@@ -74,8 +71,8 @@ class DummyTone():
     def __init__(self, note_names):
         pass
 
-    def play_chord(self, chord):
-        print("play_chord:%s" % str(chord))
+    def play_chord(self, fingering):
+        print("play_chord:%s" % str(fingering))
 
     def get_longest_time(self):
         """Get the longest time (and hence fastest BPM) tolerable"""
@@ -95,8 +92,9 @@ driver = None
 def set_scale(scale_data):
     global scale, driver
     scale = scale_data
-    driver = DummyTone(scale) #TESTING
-
+    #driver = DummyTone(scale) #TESTING
+    driver = PygameTone(scale) #REAL
+    
 def get_longest_time():
     """Get the time duration in seconds of the longest .wav file in the scale.
         This is the longest time (and hence related to the fastest BPM achievable without glitching)
@@ -117,12 +115,12 @@ def play_chord(scale, fingering_mask):
     #TODO the fingering needs to be cached so that we don't keep regenerating it each call.
     #use a memoize pattern here
     #Also want the tones module to memoize, so that it uses a fast-lookup that maps to actual sound objects
-    chord = []
-    for i in range(len(scale)):
-        if fingering_mask[i] == 1:
-            chord.append(scale[i])
+    #chord = []
+    #for i in range(len(scale)):
+    #    if fingering_mask[i] == 1:
+    #        chord.append(scale[i])
 
-    driver.play_chord(chord)
+    driver.play_chord(fingering_mask)
 
 
 #----- TEST HARNESS -----------------------------------------------------------
