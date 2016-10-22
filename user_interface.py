@@ -6,10 +6,28 @@
 
 #TODO: Add parser exceptions for invalid data received
 
+#----- DUMMY MICROBIT ---------------------------------------------------------
+
+class DummyMicrobit():
+    def __init__(self):
+        pass
+
+    def get_next_message(self):
+        return None # TODO
+
+    def send_message(self, message):
+        print("to_microbit:%s" % str(message))
+
+
+#----- MODULE STATE -----------------------------------------------------------
+
+microbit = DummyMicrobit()
+
+
 #----- MESSAGE RECEPTION ------------------------------------------------------
 
 def poll_message():
-    return None # TODO
+    return microbit.get_next_message()
     #   (non blocking)
     #   if a whole line is in the buffer waiting to be processed,
     #       return it
@@ -62,7 +80,7 @@ def handle_size_change(msg):
 
 def handle_state_change(msg):
     #  state change handler
-    #   [C,]{0-8},{0-8},(1,0) #NOTE: Why single digit when others are double digit??
+    #   [C,]{0-8},{0-8},(1,0)
 
     fields = msg.split(',')
     col, row, state = fields #TODO: number of params exception
@@ -82,16 +100,15 @@ def handle_state_change(msg):
 def get_beat_command_msg(idx):
     # form beat command
     #   B,NN
-    return "B,%02d" % idx
+    return "B,%d" % idx
 
 def get_ack_state_change_msg(col, row, state):
     # form ack state change command
     #   A,NN,NN,N
-    return "A,%02d,%02d,%1d" % (col, row, state)
+    return "A,%d,%d,%d" % (col, row, state)
 
 def send_msg(msg):
-    print("send_msg:%s" % str(msg))
-    #TODO: Knit up to microbit.send()
+    microbit.send_message(msg)
 
 def send_sync_beat(col):
     msg = get_beat_command_msg(col)

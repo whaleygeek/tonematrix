@@ -25,7 +25,7 @@ etc
     C,{0-8},{0-8},(1,0)             state change message
 
     format:
-        C,%2d,%2d,%1d\n
+        C,%d,%d,%d\n
 
 ### State Change Ack
 
@@ -36,7 +36,7 @@ etc
     A,{0-8},{0-8},(1,0)             ack state change message
 
     format:
-        A,%2d,%2d,%1d\n
+        A,%d,%d,%d\n
 
 ### Beat Sync
 
@@ -45,7 +45,7 @@ etc
     B,NN
     
     format:
-        B,%2d\n
+        B,%d\n
 
 
 ## BRIDGEBIT
@@ -61,7 +61,7 @@ etc
         S,NN,NN
         
     format:
-        S,%2d,%2d,%2d\n
+        S,%d,%d,%d\n
         
 ### BPM Change
 
@@ -69,7 +69,7 @@ etc
         T,NNN
         
     format:
-        T,%3d\n
+        T,%d\n
         
 
 ## PI
@@ -86,7 +86,7 @@ etc
         S,NN,NN                         size of grid change
 
     format:
-        S,%2d,%2d\n
+        S,%d,%d\n
 
 
 ### BPM Change
@@ -95,7 +95,7 @@ etc
         T,NNN                           time in BPM
 
     format:
-        T,%3d\n
+        T,%d\n
 
 ### State change
 
@@ -103,13 +103,13 @@ etc
         C,NN,NN,N
         
     format:
-        C,%2d,%2d,%1d
+        C,%d,%d,%d
         
     Pi transmits (ack)
         A,{0-8},{0-8},(1,0)             ack state change message
 
     format:
-        A,%2d,%2d,%1d\n
+        A,%d,%d,%d\n
 
 
 
