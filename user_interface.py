@@ -17,7 +17,8 @@ class DummyMicrobit():
             (5, "C,0,0,1"),
             (5, "C,0,2,1"),
             (5, "C,0,4,1"),
-            (6, "T,240")
+            (6, "T,240"),
+            (10,"S,2,5")
         ]
         self.start_time = time.time()
         self.next_test_idx = 0
@@ -42,12 +43,14 @@ class DummyMicrobit():
 
 #----- MODULE STATE -----------------------------------------------------------
 
+#TODO: Must wire up to real microbit over serial port (using microbit module)
+
 microbit = DummyMicrobit()
 
 
 #----- MESSAGE RECEPTION ------------------------------------------------------
 
-def poll_message():
+def poll_message(): #TESTED OK
     return microbit.get_next_message()
     #   (non blocking)
     #   if a whole line is in the buffer waiting to be processed,
@@ -55,7 +58,7 @@ def poll_message():
     #   else
     #       return None
 
-def decode_and_handle(msg):
+def decode_and_handle(msg): # TESTED OK
     # First char is cmd, rest is data
     #TODO:parser exception
     cmdchar = msg[0]
@@ -96,6 +99,8 @@ def handle_size_change(msg):
 
     fields = msg.split(',')
     cols, rows = fields #TODO: number of params exception
+    cols = int(cols) #TODO: number format exception
+    rows = int(rows) #TODO: number format exception
 
     return ("SIZE", cols, rows)
 
