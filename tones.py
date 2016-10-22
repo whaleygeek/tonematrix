@@ -3,6 +3,17 @@
 # A simple abstract interface to playing tones
 # This is mainly to allow testing on a non pygame platform (while travelling!)
 
+#----- CONFIG -----------------------------------------------------------------
+
+# Time overhead to load notes to play a chord of a reasonable length
+# Note, this is driver specific, and also changes with the number of notes
+# in a chord. It is just an estimate at the moment, we might make this a
+# bit cleverer later so we can find out a dynamic value based on the size
+# of the scale loaded (worst case all notes playing, so it takes
+# 5 loop iterations to start 5 notes playing)
+
+NOTE_LOAD_OVERHEAD = 0.001
+
 #----- PYGAME TONE ------------------------------------------------------------
 
 class PygameTone():
@@ -36,8 +47,9 @@ class PygameTone():
         self.max_length = max_length
         self.min_length = min_length
 
-    def get_shortest_time(self):
-        return 1 # TODO scan get_length of all notes, choose biggest
+    def get_longest_time(self):
+        """Get the longest length of any note/wav file"""
+        return self.max_length
 
     def play_chord(self, chord):
         # Memoise a set of note instances references for this chord pattern
@@ -65,9 +77,9 @@ class DummyTone():
     def play_chord(self, chord):
         print("play_chord:%s" % str(chord))
 
-    def get_shortest_time(self):
-        """Get the shortest time (and hence fastest BPM) tolerable"""
-        return 0.5 # 0.5 second, this is just for testing
+    def get_longest_time(self):
+        """Get the longest time (and hence fastest BPM) tolerable"""
+        return 0.2 # 0.5 second, this is just for testing
         # we can use this to test that a warning occurs and BPM message
         # rejected if it would cause glitching on playback
 
@@ -85,17 +97,17 @@ def set_scale(scale_data):
     scale = scale_data
     driver = DummyTone(scale) #TESTING
 
-def get_shortest_time():
+def get_longest_time():
     """Get the time duration in seconds of the longest .wav file in the scale.
-        This is the shortest time (and hence related to the fastest BPM achievable without glitching)
+        This is the longest time (and hence related to the fastest BPM achievable without glitching)
     """
-    return driver.get_shortest_time()
+    return driver.get_longest_time()
 
 def get_fastest_BPM():
     """Get the fastest BPM tolerable without glitching"""
-    fastest_bpm = 60.0 / get_shortest_time()
-    #TODO: Probably want a driver-specific overhead for time it takes Python
-    #to get round the loop and trigger all the samples.
+    lt = get_longest_time() + NOTE_LOAD_OVERHEAD
+
+    fastest_bpm = 60.0 / lt
     return fastest_bpm
 
 def play_chord(scale, fingering_mask):
@@ -133,9 +145,6 @@ if __name__ == "__main__":
         [1,0,1,0,1,0,0,0,0,0,0]  # A part
     ]
     DELAY = 0.75 # must be longer than any of the recorded notes plus a bit of overhead
-    #TODO: could pre-validate length of all used wav files by doing get_length() on
-    # each one when loading the driver class, and then asking via a method what the
-    # shortest play duration is and validating against the timer setup. See above.
 
     set_scale(scale)
     timer = Timer(DELAY)
