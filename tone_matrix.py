@@ -24,9 +24,10 @@ tones.set_scale(scale)
 
 #----- STATE ------------------------------------------------------------------
 
-bpm          = DEFAULT_BPM
-timer        = Timer(60.0/bpm)
+bpm          = None
+timer        = None
 colidx       = 0
+
 
 
 #----- TEST DATA --------------------------------------------------------------
@@ -36,6 +37,25 @@ matrix.clear()
 ##matrix.set_col(0, [0,1])
 ##matrix.set_col(2, [0,2,4])
 
+#------------------------------------------------------------------------------
+
+def config_BPM(new_bpm):
+    global bpm, timer
+
+    fastest_bpm = tones.get_fastest_BPM()
+    if new_bpm > fastest_bpm:
+        print("warning:rejected:BPM %d too fast, max is:%d" % (new_bpm, fastest_bpm))
+        return False # Not done
+    else:
+        bpm = new_bpm
+        if timer is None:
+            timer = Timer(60.0/bpm)
+        else:
+            timer.config(60.0/bpm)
+            timer.sync()
+
+    return True # Done
+
 
 #----- MAIN -------------------------------------------------------------------
 
@@ -43,12 +63,12 @@ def main():
     global bpm, colidx
 
     # start beat timer
-    timer.sync()
+    config_BPM(DEFAULT_BPM)
 
     # loop forever
     while True:
         # maintain timing
-        if timer.check():
+        if timer is not None and timer.check():
             user_interface.send_sync_beat(colidx)
             fingering_mask = matrix.get_fingering(colidx)
             ##print("fingering_mask:%s" % str(fingering_mask))
@@ -67,9 +87,7 @@ def main():
                 # change timer rate
                 print("BPM:change:%s" % str(change_rec))
                 cmd, new_bpm = change_rec
-                bpm = new_bpm
-                timer.config(60.0/bpm)
-                timer.sync()
+                config_BPM(new_bpm)
 
             elif cmd == "STATE":
                 # change matrix state
@@ -82,7 +100,7 @@ def main():
                 cmd, cols, rows = change_rec
                 matrix.change_size(cols, rows)
                 colidx = 0 # restart from left in case now smaller
-                timer.sync() # restart timing
+                if timer is not None: timer.sync() # restart timing
 
             else:
                 print("warning: unhandled cmd:%s" % str(change_rec))

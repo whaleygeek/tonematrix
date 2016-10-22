@@ -36,6 +36,9 @@ class PygameTone():
         self.max_length = max_length
         self.min_length = min_length
 
+    def get_shortest_time(self):
+        return 1 # TODO scan get_length of all notes, choose biggest
+
     def play_chord(self, chord):
         # Memoise a set of note instances references for this chord pattern
         if not chord in self.chords:
@@ -62,6 +65,12 @@ class DummyTone():
     def play_chord(self, chord):
         print("play_chord:%s" % str(chord))
 
+    def get_shortest_time(self):
+        """Get the shortest time (and hence fastest BPM) tolerable"""
+        return 0.5 # 0.5 second, this is just for testing
+        # we can use this to test that a warning occurs and BPM message
+        # rejected if it would cause glitching on playback
+
 
 #----- STATE ------------------------------------------------------------------
 
@@ -75,6 +84,19 @@ def set_scale(scale_data):
     global scale, driver
     scale = scale_data
     driver = DummyTone(scale) #TESTING
+
+def get_shortest_time():
+    """Get the time duration in seconds of the longest .wav file in the scale.
+        This is the shortest time (and hence related to the fastest BPM achievable without glitching)
+    """
+    return driver.get_shortest_time()
+
+def get_fastest_BPM():
+    """Get the fastest BPM tolerable without glitching"""
+    fastest_bpm = 60.0 / get_shortest_time()
+    #TODO: Probably want a driver-specific overhead for time it takes Python
+    #to get round the loop and trigger all the samples.
+    return fastest_bpm
 
 def play_chord(scale, fingering_mask):
     ##print("play_chord: %s with fingering_mask %s" % (str(scale), str(fingering_mask)))
