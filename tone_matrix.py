@@ -5,26 +5,39 @@
 import user_interface
 import matrix
 import tones
-
 from Timer import Timer
 
-DEFAULT_BPM  = 120 # must be longer than the longest note, to prevent glitching
+
+#----- CONFIG -----------------------------------------------------------------
+
+DEFAULT_BPM  = 120 # must be longer than the longest sample length, to prevent glitching
+# A pentatonic tone matrix
+MATRIX_COLS  = 5
+MATRIX_ROWS  = 5
+
+#NOTE: This must match the size of the matrix
+#scale = ['C', 'C#', 'D', 'D#', 'E', 'F#', 'G', 'G#', 'A', 'A#', 'B', 'C']
+#scale = ['C','D','E','F','G','A','B']
+scale = ['C#', 'D#', 'F#', 'G#', 'A#'] # One of many pentatonic scales
+tones.set_scale(scale)
+
+
+#----- STATE ------------------------------------------------------------------
 
 bpm          = DEFAULT_BPM
 timer        = Timer(60.0/bpm)
 colidx       = 0
 
-#NOTE: This must match the size of the matrix
-#scale = ['C', 'C#', 'D', 'D#', 'E', 'F#', 'G', 'G#', 'A', 'A#', 'B', 'C']
-scale = ['C','D','E','F','G','A','B']
-tones.set_scale(scale)
 
-#TESTDATA
+#----- TEST DATA --------------------------------------------------------------
 
+matrix.change_size(MATRIX_COLS, MATRIX_ROWS)
 matrix.clear()
 matrix.set_col(0, [0,1])
 matrix.set_col(2, [0,2,4])
 
+
+#----- MAIN -------------------------------------------------------------------
 def main():
     global bpm, colidx
 
