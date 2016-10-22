@@ -3,7 +3,11 @@
 # A simple abstract interface to playing tones
 # This is mainly to allow testing on a non pygame platform (while travelling!)
 
+#----- PYGAME TONE ------------------------------------------------------------
+
 class PygameTone():
+    """A tone player driver that uses PyGame"""
+
     def __init__(self, note_names):
         self.note_names = note_names
 
@@ -47,7 +51,11 @@ class PygameTone():
             note.play()
 
 
+#----- DUMMY TONE -------------------------------------------------------------
+
 class DummyTone():
+    """A tone player driver, that just prints the notes it would play"""
+
     def __init__(self, note_names):
         pass
 
@@ -55,8 +63,13 @@ class DummyTone():
         print("play_chord:%s" % str(chord))
 
 
+#----- STATE ------------------------------------------------------------------
+
 scale = None
 driver = None
+
+
+#------------------------------------------------------------------------------
 
 def set_scale(scale_data):
     global scale, driver
@@ -64,7 +77,7 @@ def set_scale(scale_data):
     driver = DummyTone(scale) #TESTING
 
 def play_chord(scale, fingering_mask):
-    print("play_chord: %s with fingering_mask %s" % (str(scale), str(fingering_mask)))
+    ##print("play_chord: %s with fingering_mask %s" % (str(scale), str(fingering_mask)))
 
     # build the fingered chord from the scale
     #TODO the fingering needs to be cached so that we don't keep regenerating it each call.
@@ -95,7 +108,7 @@ if __name__ == "__main__":
         [1,0,1,0,1,0,0,0,0,0,0], # A part
 
         [0,0,0,0,1,0,1,0,1,0,1], # B part
-        [1,0,1,0,1,0,0,0,0,0,0] # A part
+        [1,0,1,0,1,0,0,0,0,0,0]  # A part
     ]
     DELAY = 0.75 # must be longer than any of the recorded notes plus a bit of overhead
     #TODO: could pre-validate length of all used wav files by doing get_length() on
