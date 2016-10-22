@@ -14,9 +14,9 @@ etc
 
 ## TxBit
 
-1. State changes are sent on the radio.
-2. State changes are acknowledged
-3. Beats come in and are processed
+1. State changes are sent via the radio.
+2. State changes come in as acknowledgements (could re-send on timeout)
+3. Beat syncs come in, and are processed by their column
 
 ### State Change
 
@@ -50,10 +50,10 @@ etc
 
 ## BRIDGEBIT
 
-1. Sends all radio messages over serial.
-2. Send all serial messages over radio.
+1. Sends all incoming radio messages over serial.
+2. Sends all incomingserial messages over radio.
 3. Buttons used to change grid size (send via serial)
-4. Buttons sized to change BPM (send via serial)
+4. Buttons used to change BPM (send via serial)
 
 ### Grid Size Change
 
@@ -76,7 +76,7 @@ etc
 
 1. Handles grid size changes
 2. Handles BPM changes
-3. Handles state changes of TxBits
+3. Handles state changes of TxBits, with acknowledgement
 4. Generates beat timing
 5. Generates chords on speaker
 

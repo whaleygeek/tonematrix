@@ -3,10 +3,6 @@
 # A simple abstract interface to playing tones
 # This is mainly to allow testing on a non pygame platform (while travelling!)
 
-from Timer import Timer
-
-
-
 class PygameTone():
     def __init__(self, note_names):
         self.note_names = note_names
@@ -65,13 +61,15 @@ driver = None
 def set_scale(scale_data):
     global scale, driver
     scale = scale_data
-    driver = DummyTone(scale)
+    driver = DummyTone(scale) #TESTING
 
 def play_chord(scale, fingering_mask):
     print("play_chord: %s with fingering_mask %s" % (str(scale), str(fingering_mask)))
 
     # build the fingered chord from the scale
     #TODO the fingering needs to be cached so that we don't keep regenerating it each call.
+    #use a memoize pattern here
+    #Also want the tones module to memoize, so that it uses a fast-lookup that maps to actual sound objects
     chord = []
     for i in range(len(scale)):
         if fingering_mask[i] == 1:
@@ -83,6 +81,8 @@ def play_chord(scale, fingering_mask):
 #----- TEST HARNESS -----------------------------------------------------------
 
 if __name__ == "__main__":
+    from Timer import Timer
+
     scale = ['C', 'D', 'E', 'F', 'G', 'A', 'B']
 
     # C = C D E F G A B

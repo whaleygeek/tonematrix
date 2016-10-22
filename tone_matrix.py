@@ -14,8 +14,19 @@ bpm          = DEFAULT_BPM
 timer        = Timer(60.0/bpm)
 colidx       = 0
 
-scale = ['C', 'C#', 'D', 'D#', 'E', 'F#', 'G', 'G#', 'A', 'A#', 'B', 'C']
+#NOTE: This must match the size of the matrix
+#scale = ['C', 'C#', 'D', 'D#', 'E', 'F#', 'G', 'G#', 'A', 'A#', 'B', 'C']
+scale = ['C','D','E','F','G','A','B']
 tones.set_scale(scale)
+
+# first col test data
+matrix.set_cell(0,0,1)
+matrix.set_cell(0,1,1)
+
+# third col test data
+matrix.set_cell(2,0,1)
+matrix.set_cell(2,2,1)
+matrix.set_cell(2,4,1)
 
 def main():
     global bpm, colidx
@@ -29,6 +40,7 @@ def main():
         if timer.check():
             user_interface.send_sync_beat(colidx)
             fingering_mask = matrix.get_fingering(colidx)
+            ##print("fingering_mask:%s" % str(fingering_mask))
 
             tones.play_chord(scale, fingering_mask)
             colidx = matrix.next_index(colidx)
@@ -52,13 +64,14 @@ def main():
                 # change matrix state
                 print("STATE:change:%s" % str(change_rec))
                 cmd, col, row, state = change_rec
-                matrix.set_note(col, row, state)
+                matrix.set_cell(col, row, state)
 
             elif cmd == "SIZE":
                 # change num_cols and num_rows
-                # init present_col to zero
-                # resync timer
-                pass # TODO
+                cmd, cols, rows = change_rec
+                matrix.change_size(cols, rows)
+                colidx = 0 # restart from left in case now smaller
+                timer.sync() # restart timing
 
             else:
                 print("warning: unhandled cmd:%s" % str(change_rec))
