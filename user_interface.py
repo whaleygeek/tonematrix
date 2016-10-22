@@ -2,11 +2,12 @@
 #
 # The interface to a canvas of micro:bit devices
 
-##import microbit #will auto connect?
-
-#TODO: Add parser exceptions for invalid data received
-
 import time
+
+##microbit = DummyMicrobit()
+import microbit #will auto connect
+
+
 
 #----- DUMMY MICROBIT ---------------------------------------------------------
 
@@ -39,13 +40,8 @@ class DummyMicrobit():
 
     def send_message(self, message):
         print("to_microbit:%s" % str(message))
+        microbit.send_message(message)
 
-
-#----- MODULE STATE -----------------------------------------------------------
-
-#TODO: Must wire up to real microbit over serial port (using microbit module)
-
-microbit = DummyMicrobit()
 
 
 #----- MESSAGE RECEPTION ------------------------------------------------------
@@ -134,6 +130,8 @@ def get_ack_state_change_msg(col, row, state): # TESTED OK
     return "A,%d,%d,%d" % (col, row, state)
 
 def send_msg(msg): # TESTED OK
+    if msg[-1] != '\n':
+        msg += '\n'
     microbit.send_message(msg)
 
 def send_sync_beat(col): # TESTED OK

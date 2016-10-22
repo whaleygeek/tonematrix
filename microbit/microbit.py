@@ -2,21 +2,21 @@
 
 """A serial port connection to a micro:bit"""
 
-# NOTE: no specific protocol is implied by this interface.
+# No specific protocol is implied by this interface.
 # This just provides a generic transport adaptor to a micro:bit via pyserial
 
-# NOTE: This was cloned (as a starting point) from the mb_remote project.
-# It needs to be changed to make it all non blocking for this application.
+# This was cloned (as a starting point) from the mb_remote project.
+# That project came originally from github.com/whaleygeek/anyio.
 
 # NOTE: this is currently written to auto scan, and only supports a single
 # micro:bit instance. It might be rewritten later to support any number
 # of instances (identification then gets interesting and application specific!)
 
 
-##import time
-
-
 #----- CONFIGURATION -----------------------------------------------------------
+
+# Choose an embedded pyserial (for ease of distribution).
+# Change this flag if you want to use the system installed version.
 
 DEBUG = False
 USE_EMBEDDED_PYSERIAL = True
@@ -31,6 +31,14 @@ import serial
 
 
 #----- PORTSCAN ----------------------------------------------------------------
+
+# This will check for the portscan.cache file with a remembered serial port
+# identifier. If that exists, it will just use the serial port identified
+# in that file. If the file does not exist, it performs a workflow that
+# prompts the user. Note that if you plug your micro:bit into a different
+# USB port or use a different USB hub configuration, this may renumber
+# the port and require a re-scan. Just delete the portscan.cache file
+# and re-run your app code, if that happens.
 
 import portscan
 
@@ -55,21 +63,20 @@ s.baudrate = BAUD
 s.parity   = serial.PARITY_NONE
 s.databits = serial.EIGHTBITS
 s.stopbits = serial.STOPBITS_ONE
+s.timeout = 0 # non blocking mode
 
 s.close()
 s.port = PORT
 s.open()
 
 
-#----- SERIAL PORT ACCESSORS --------------------------------------------------
+#----- SERIAL PORT READ AND WRITE ENGINE --------------------------------------
 
 line_buffer = ""
 rec_buffer = None
 
-#TODO: This has to be changed to be non blocking.
-#pyserial supports that.
-
 def read_waiting():
+    """Poll the serial and fill up rec_buffer if something comes in"""
     global rec_buffer
     if rec_buffer != None:
         return True
@@ -83,6 +90,7 @@ def read_waiting():
 
 
 def read():
+    """Poll the rec_buffer and remove next line from it if there is a line in it"""
     global rec_buffer
 
     if not read_waiting():
@@ -95,6 +103,7 @@ def read():
 
 
 def process_serial():
+    """Low level serial poll function"""
     global line_buffer
 
     while True:
@@ -116,27 +125,33 @@ def process_serial():
             line_buffer += data
 
 
-#----- TRANSPORT ADAPTOR ------------------------------------------------------
+#----- ADAPTOR ----------------------------------------------------------------
 
-#TODO: This has to be changed to be non blocking.
-#pyserial supports that.
-##def send(msg):
-##    msg += '\r\n'
-##    for tx in msg:
-##        #print(tx)
-##        s.write(tx)
-##        rx = s.read(1) # set timeout of 1 sec, if don't get prompt, error recovery CTRL-C wait prompt with timeout?
-##        if tx != rx:
-##            print("diff")
-##            # error recovery, CTRL-C wait for prompt with timeout?
+# This is here, so you can change the concurrency and blocking model,
+# independently of the underlying code, to adapt to how your app wants
+# to interact with the serial port.
 
+# NOTE: This is configured for non blocking send and receive, but no threading
+# and no callback handling.
 
-##def get():
-##    while True:
-##        line = read()
-##        if line != None:
-##            return line
-##        time.sleep(0.1)
+def send_message(msg):
+    """Send a message to the micro:bit.
+        It is the callers responsibility to add newlines if you want them.
+    """
+    print("Sending:%s" % msg)
+
+    s.write(msg)
+
+def get_next_message():
+    """Receive a single line of text from the micro:bit.
+        Newline characters are pre-stripped from the end.
+        If there is not a complete line waiting, returns None.
+        Call this regularly to 'pump' the receive engine.
+    """
+    result = read()
+    if result != None:
+        print("get_next_message:%s" % str(result))
+    return result
 
 
 # END
