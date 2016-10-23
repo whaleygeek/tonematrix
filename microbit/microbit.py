@@ -138,7 +138,7 @@ def send_message(msg):
     """Send a message to the micro:bit.
         It is the callers responsibility to add newlines if you want them.
     """
-    print("Sending:%s" % msg)
+    ##print("Sending:%s" % msg)
 
     s.write(msg)
 
@@ -149,8 +149,8 @@ def get_next_message():
         Call this regularly to 'pump' the receive engine.
     """
     result = read()
-    if result != None:
-        print("get_next_message:%s" % str(result))
+    ##if result != None:
+    ##    print("get_next_message:%s" % str(result))
     return result
 
 

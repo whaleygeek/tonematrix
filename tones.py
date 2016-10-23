@@ -24,8 +24,8 @@ class PygameTone():
 
         # Init the sound driver
         import pygame
+        pygame.mixer.pre_init(22050, -16, 2, 1024)
         pygame.mixer.init()
-
         # Cache all sound files, ready to mix/play
         notes = []
         min_length = 9999
@@ -47,6 +47,14 @@ class PygameTone():
         self.max_length = max_length
         self.min_length = min_length
 
+        self.tests = [
+            [notes[0]],
+            [notes[1]],
+            [notes[2]],
+            [notes[3]]
+        ]
+        self.testidx = 0
+
     def get_longest_time(self):
         """Get the longest length of any note/wav file"""
         return self.max_length
@@ -57,11 +65,8 @@ class PygameTone():
         for ni in range(len(fingering)):
             if fingering[ni] == 1:
                 sounds.append(self.notes[ni])
-
-        # Play the required chord pattern
         for note in sounds:
             note.play()
-
 
 #----- DUMMY TONE -------------------------------------------------------------
 
@@ -120,6 +125,8 @@ def play_chord(scale, fingering_mask):
     #    if fingering_mask[i] == 1:
     #        chord.append(scale[i])
 
+    ##import time
+    ##print(time.time())
     driver.play_chord(fingering_mask)
 
 

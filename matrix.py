@@ -18,16 +18,15 @@ DEFAULT_ROWS = 5
 #----- STATE ------------------------------------------------------------------
 
 # stored rotated ([col][row]) for easy indexing later
-matrix = [ [0 for i in range(MAX_ROWS)] for j in range(MAX_COLS) ]
 
 num_cols    = DEFAULT_COLS
 num_rows    = DEFAULT_ROWS
-
+matrix      = None
 
 #----- ACTIONS ----------------------------------------------------------------
 
 def change_size(cols, rows):
-    global num_cols, num_rows
+    global num_cols, num_rows, matrix
 
     if cols > MAX_COLS or cols < 1:
         raise ValueError("Invalid cols:%d, allowed:1..%d" % (cols, MAX_COLS))
@@ -36,6 +35,8 @@ def change_size(cols, rows):
 
     num_cols = cols
     num_rows = rows
+    matrix = [ [0 for i in range(num_rows)] for j in range(num_cols) ]
+
 
 def set_cell(col, row, state):
     matrix[col][row] = state
@@ -61,6 +62,8 @@ def set_col(col, data):
 
 
 #----- MAIN -------------------------------------------------------------------
+
+change_size(DEFAULT_COLS, DEFAULT_ROWS)
 
 
 # END

@@ -10,7 +10,7 @@ from Timer import Timer
 
 #----- CONFIG -----------------------------------------------------------------
 
-DEFAULT_BPM  = 100 # must be longer than the longest sample length, to prevent glitching
+DEFAULT_BPM  = 110 # must be longer than the longest sample length, to prevent glitching
 # A pentatonic tone matrix
 MATRIX_COLS  = 4
 MATRIX_ROWS  = 5
@@ -34,10 +34,10 @@ colidx       = 0
 
 matrix.change_size(MATRIX_COLS, MATRIX_ROWS)
 matrix.clear()
-matrix.set_col(0, [0,1,0,0,0])
-matrix.set_col(1, [0,0,1,0,0])
-matrix.set_col(2, [0,0,0,1,0])
-matrix.set_col(3, [0,0,0,0,1])
+matrix.set_col(0, [1,1,0,0,0])
+matrix.set_col(1, [0,1,1,0,0])
+matrix.set_col(2, [0,0,1,1,0])
+matrix.set_col(3, [0,0,0,1,1])
 
 #------------------------------------------------------------------------------
 
