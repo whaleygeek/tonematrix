@@ -9,6 +9,12 @@ on radio rx:
         if string matches “A” + “,” + myX + “,” + myY + “1”
 etc
 
+# Changelog
+
+0.2
+* Add the provisioning section
+* Change the format for row/column size changes to allow a blocks-only implementation in PXT
+* Clarify rows and columsn mapping to music
 
 # Message Format
 
@@ -58,19 +64,22 @@ etc
 ### Grid Size Change
 
     Bridge sends serial:
-        S,NN,NN
-        
+       rows:N
+       or 
+       cols:N
+
     format:
-        S,%d,%d,%d\n
+        {rows,cols},%d\n
         
 ### BPM Change
 
     Bridge sends serial:
-        T,NNN
+        speed:N 
         
     format:
-        T,%d\n
-        
+        speed,%d\n
+
+N is in beats per minute
 
 ## PI
 
@@ -79,6 +88,7 @@ etc
 3. Handles state changes of TxBits, with acknowledgement
 4. Generates beat timing
 5. Generates chords on speaker
+6. (Optionally) Handles provisiioning of micro:bits if they are turned on 1-by-1
 
 ### Grid size change
 
@@ -111,5 +121,30 @@ etc
     format:
         A,%d,%d,%d\n
 
+### Provisioning
+
+    Pi receives:
+    	"??"
+
+    Pi response:
+    	two separate messages, each just numbers, the next number in the grid to be filled
+	X
+	Y
+
+    format:
+    	%01d
+
+# Grid to music mapping
+
+Rows are pitch, columns are beats in a bar
+
+# Provisioning flow
+
+When a node micro:bit is first turned on, it sends "??" which is a request for the Pi to tell it
+the next available slot in the grid.
+
+If the Pi responds, it should respond with two messages, each a single character between 0-9.
+
+The grid should fill up along the rows first, then down to the next column.
 
 
