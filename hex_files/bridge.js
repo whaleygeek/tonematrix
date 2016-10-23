@@ -9,7 +9,6 @@ radio.setGroup(99)
 		    basic.forever(() => {
 			            serialMessage = serial.readUntil(serial.delimiters(Delimiters.NewLine))
 			            radio.sendString(serialMessage)
-			            serial.writeLine(serialMessage)
 			        })
 	})
 input.onButtonPressed(Button.B, () => {
