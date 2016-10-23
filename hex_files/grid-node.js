@@ -24,11 +24,11 @@ radio.onDataReceived(() => {
         rxString = radio.receiveString()
         serial.writeLine("--A," + row + "," + col + ",1")
         serial.writeLine(rxString)
-        if (rxString == "B," + col + "\r") {
+        if (rxString == "B," + col) {
             playBeat()
-        } else if (rxString == "A," + row + "," + col + ",1\r") {
+        } else if (rxString == "A," + row + "," + col + ",1") {
             on_state = 1
-        } else if (rxString == "A," + row + "," + col + ",0\r") {
+        } else if (rxString == "A," + row + "," + col + ",0") {
             on_state = 0
         } else {
             serial.writeLine("no match")
@@ -128,3 +128,4 @@ function strtonum(str = "") {
     //Extremely naive string to number conversion. Hooray for <10.
     return (str.charCodeAt(0) - 48)
 }
+
