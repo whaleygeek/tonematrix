@@ -11,7 +11,7 @@
 MAX_COLS = 10 # 0..9
 MAX_ROWS = 10 # 0..9
 
-DEFAULT_COLS = 5
+DEFAULT_COLS = 8
 DEFAULT_ROWS = 5
 
 
@@ -24,6 +24,12 @@ num_rows    = DEFAULT_ROWS
 matrix      = None
 
 #----- ACTIONS ----------------------------------------------------------------
+
+def change_cols(cols):
+    change_size(cols, num_rows)
+
+def change_rows(rows):
+    change_size(num_cols, rows)
 
 def change_size(cols, rows):
     global num_cols, num_rows, matrix

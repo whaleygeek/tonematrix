@@ -57,25 +57,33 @@ def poll_message(): #TESTED OK
 def decode_and_handle(msg): # TESTED OK
     # First char is cmd, rest is data
     #TODO:parser exception
-    cmdchar = msg[0]
-    comma   = msg[1]
-    data    = msg[2:]
+    # First find what kind of message we have
+    if ":" in msg:
+        # We're dealing with the pxt 'data:value' pair
+        cmdchar = msg.split(":")[0]
+        data = msg.split(":")[1]
+    else:
+        cmdchar = msg[0]
+        comma   = msg[1]
+        data    = msg[2:]
+        if comma != ',':
+            print("warning: malformed message:%s" % msg)
+            return None
 
-    if comma != ',':
-        print("warning: malformed message:%s" % msg)
-        return None
-
-    if cmdchar == 'T': # timing change
+    if cmdchar == 'bpm': # timing change
         return handle_bpm_change(data)
 
-    elif cmdchar == 'S': # size change
-        return handle_size_change(data)
+    elif cmdchar == 'rows': # size change
+        return handle_rows_change(data)
+
+    elif cmdchar == 'cols': # size change
+        return handle_cols_change(data)
 
     elif cmdchar == 'C': # state change
         return handle_state_change(data)
 
     else:
-        print("warning: unknown command received:%s" % msg)
+        print("warning: unknown command received:%s" % cmdchar)
         return None
 
 def handle_bpm_change(msg): # TESTED OK
@@ -87,6 +95,18 @@ def handle_bpm_change(msg): # TESTED OK
     bpm = int(msg)
 
     return ("BPM", bpm)
+
+def handle_cols_change(msg):
+    # change just the cols
+    #   (note, no ack)
+    cols = int(msg) #TODO: number format exception
+    return ("COLS", cols)
+
+def handle_rows_change(msg):
+    # change just the rows
+    #   (note, no ack)
+    rows = int(msg) #TODO: number format exception
+    return ("ROWS", rows)
 
 def handle_size_change(msg): # TESTED OK
     # size change handler

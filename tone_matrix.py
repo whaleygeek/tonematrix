@@ -12,7 +12,7 @@ from Timer import Timer
 
 DEFAULT_BPM  = 110 # must be longer than the longest sample length, to prevent glitching
 # A pentatonic tone matrix
-MATRIX_COLS  = 4
+MATRIX_COLS  = 8
 MATRIX_ROWS  = 5
 
 #NOTE: This must match the size of the matrix
@@ -34,10 +34,14 @@ colidx       = 0
 
 matrix.change_size(MATRIX_COLS, MATRIX_ROWS)
 matrix.clear()
-matrix.set_col(0, [1,1,0,0,0])
-matrix.set_col(1, [0,1,1,0,0])
-matrix.set_col(2, [0,0,1,1,0])
-matrix.set_col(3, [0,0,0,1,1])
+matrix.set_col(0, [0,1,0,0,0])
+matrix.set_col(1, [0,0,1,0,0])
+matrix.set_col(2, [0,0,0,1,0])
+matrix.set_col(3, [0,0,0,0,1])
+matrix.set_col(4, [0,0,0,1,0])
+matrix.set_col(5, [0,0,1,0,0])
+matrix.set_col(6, [0,1,0,0,0])
+matrix.set_col(7, [1,0,0,0,0])
 
 #------------------------------------------------------------------------------
 
@@ -96,6 +100,18 @@ def main():
                 print("STATE:change:%s" % str(change_rec))
                 cmd, col, row, state = change_rec
                 matrix.set_cell(col, row, state)
+
+            elif cmd == "ROWS":
+                # change num_rows
+                cmd, rows = change_rec
+                matrix.change_rows(rows)
+
+            elif cmd == "COLS":
+                # change num_cols
+                cmd, cols = change_rec
+                matrix.change_cols(cols)
+                colidx = 0 # restart from left in case now smaller
+                if timer is not None: timer.sync() # restart timing
 
             elif cmd == "SIZE":
                 # change num_cols and num_rows
