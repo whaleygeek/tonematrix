@@ -72,6 +72,11 @@ def main():
     # start beat timer
     config_BPM(DEFAULT_BPM)
 
+    matrix.clear()
+    for i in range(0,MATRIX_COLS):
+        for j in range(0,MATRIX_ROWS):
+            user_interface.handle_state_change(j + "," + i + ",0")
+
     # loop forever
     while True:
         # maintain timing
@@ -99,7 +104,7 @@ def main():
             elif cmd == "STATE":
                 # change matrix state
                 print("STATE:change:%s" % str(change_rec))
-                cmd, col, row, state = change_rec
+                cmd, row, col, state = change_rec
                 matrix.set_cell(col, row, state)
 
             elif cmd == "ROWS":

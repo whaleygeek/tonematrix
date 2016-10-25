@@ -43,7 +43,6 @@ class DummyMicrobit():
         microbit.send_message(message)
 
 
-
 #----- MESSAGE RECEPTION ------------------------------------------------------
 
 def poll_message(): #TESTED OK
@@ -114,7 +113,7 @@ def handle_size_change(msg): # TESTED OK
     #   (note, no ack)
 
     fields = msg.split(',')
-    cols, rows = fields #TODO: number of params exception
+    rows, cols = fields #TODO: number of params exception
     cols = int(cols) #TODO: number format exception
     rows = int(rows) #TODO: number format exception
 
@@ -125,7 +124,7 @@ def handle_state_change(msg): # TESTED OK
     #   [C,]{0-8},{0-8},(1,0)
 
     fields = msg.split(',')
-    col, row, state = fields #TODO: number of params exception
+    row, col, state = fields #TODO: number of params exception
     #TODO: parse exception
     col   = int(col)
     row   = int(row)
@@ -147,7 +146,7 @@ def get_beat_command_msg(idx): # TESTED OK
 def get_ack_state_change_msg(col, row, state): # TESTED OK
     # form ack state change command
     #   A,NN,NN,N
-    return "A,%d,%d,%d" % (col, row, state)
+    return "A,%d,%d,%d" % (row, col, state)
 
 def send_msg(msg): # TESTED OK
     if msg[-1] != '\n':
