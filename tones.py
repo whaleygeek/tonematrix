@@ -24,7 +24,7 @@ class PygameTone():
 
         # Init the sound driver
         import pygame
-        pygame.mixer.pre_init(22050, -16, 2, 1024)
+        pygame.mixer.pre_init(22050, -16, 2, 4096)
         pygame.mixer.init()
         # Cache all sound files, ready to mix/play
         notes = []
@@ -44,7 +44,7 @@ class PygameTone():
 
         self.notes  = notes
         self.chords = []
-        self.max_length = max_length
+        self.max_length = 0 #max_length
         self.min_length = min_length
 
         self.tests = [
@@ -81,7 +81,7 @@ class DummyTone():
 
     def get_longest_time(self):
         """Get the longest time (and hence fastest BPM) tolerable"""
-        return 0.2 # 0.5 second, this is just for testing
+        return 0.1 # 0.5 second, this is just for testing
         # we can use this to test that a warning occurs and BPM message
         # rejected if it would cause glitching on playback
 

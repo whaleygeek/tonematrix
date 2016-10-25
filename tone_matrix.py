@@ -10,7 +10,7 @@ from Timer import Timer
 
 #----- CONFIG -----------------------------------------------------------------
 
-DEFAULT_BPM  = 110 # must be longer than the longest sample length, to prevent glitching
+DEFAULT_BPM  = 159 # must be longer than the longest sample length, to prevent glitching
 # A pentatonic tone matrix
 MATRIX_COLS  = 8
 MATRIX_ROWS  = 5
@@ -18,7 +18,8 @@ MATRIX_ROWS  = 5
 #NOTE: This must match the size of the matrix
 #scale = ['C', 'C#', 'D', 'D#', 'E', 'F#', 'G', 'G#', 'A', 'A#', 'B', 'C']
 #scale = ['C','D','E','F','G','A','B']
-scale = ['C#', 'D#', 'F#', 'G#', 'A#'] # One of many pentatonic scales
+#scale = ['C#', 'D#', 'F#', 'G#', 'A#'] # One of many pentatonic scales
+scale = ['1-16', '2-16', '3-16', '4-16', '5-16'] # One of many pentatonic scales
 tones.set_scale(scale)
 
 
@@ -34,14 +35,14 @@ colidx       = 0
 
 matrix.change_size(MATRIX_COLS, MATRIX_ROWS)
 matrix.clear()
-matrix.set_col(0, [0,1,0,0,0])
+matrix.set_col(0, [0,1,0,1,0])
 matrix.set_col(1, [0,0,1,0,0])
 matrix.set_col(2, [0,0,0,1,0])
-matrix.set_col(3, [0,0,0,0,1])
-matrix.set_col(4, [0,0,0,1,0])
+matrix.set_col(3, [0,1,0,0,1])
+matrix.set_col(4, [1,1,1,1,1])
 matrix.set_col(5, [0,0,1,0,0])
-matrix.set_col(6, [0,1,0,0,0])
-matrix.set_col(7, [1,0,0,0,0])
+matrix.set_col(6, [0,0,0,0,0])
+matrix.set_col(7, [0,0,0,0,0])
 
 #------------------------------------------------------------------------------
 
