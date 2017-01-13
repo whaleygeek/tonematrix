@@ -75,7 +75,7 @@ def main():
     matrix.clear()
     for i in range(0,MATRIX_COLS):
         for j in range(0,MATRIX_ROWS):
-            user_interface.handle_state_change(j + "," + i + ",0")
+            user_interface.handle_state_change(str(j) + "," + str(i) + ",0")
 
     # loop forever
     while True:
@@ -105,7 +105,7 @@ def main():
                 # change matrix state
                 print("STATE:change:%s" % str(change_rec))
                 cmd, row, col, state = change_rec
-                matrix.set_cell(col, row, state)
+                matrix.set_cell(row, col, state)
 
             elif cmd == "ROWS":
                 # change num_rows
