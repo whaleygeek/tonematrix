@@ -12,14 +12,20 @@ radio.onDataReceived(() => {
         serial.writeLine("test fired")
     }
     if (provisioning == 1) {
-        row = strtonum(radio.receiveString())
-        serial.writeNumber(row)
+        row = radio.receiveNumber()
+        //row = strtonum(radio.receiveString())
+        //serial.writeNumber(row)
+        basic.showNumber(row)
         provisioning += 1
     } else if (provisioning == 2) {
-        col = strtonum(radio.receiveString())
+        col = radio.receiveNumber()
+        basic.showNumber(col)
+        //col = strtonum(radio.receiveString())
         myIndex = row + "," + col
         on_state = 0
         provisioning = 0
+        basic.pause(300)
+        sendUpdate(0)
     } else {
         rxString = radio.receiveString()
         serial.writeLine("--A," + row + "," + col + ",1")
@@ -43,7 +49,7 @@ basic.forever(() => {
             . # # # .
             . # # # .
             . . . . .
-            `)
+            `, 20)
     } else if (on_state == 0) {
         basic.showLeds(`
             . . . . .
@@ -51,7 +57,7 @@ basic.forever(() => {
             . . . . .
             . . . . .
             . . . . .
-            `)
+            `, 20)
     } else {
         basic.showLeds(`
             . # # # .
@@ -62,6 +68,13 @@ basic.forever(() => {
             `)
     }
 })
+input.onShake(() => {
+    if (on_state == 0) {
+        sendUpdate(1)
+    } else {
+        sendUpdate(0)
+    }
+})
 input.onButtonPressed(Button.A, () => {
     //on_state = 0
     //radio.sendString("Off")
@@ -70,6 +83,15 @@ input.onButtonPressed(Button.A, () => {
 input.onButtonPressed(Button.B, () => {
     //on_state = 1
     //radio.sendString("On")
+    sendUpdate(1)
+})
+input.onButtonPressed(Button.AB, () => {
+    //on_state = 1
+    //radio.sendString("On")
+    basic.showNumber(row)
+    basic.pause(200)
+    basic.showNumber(col)
+    basic.pause(200)
     sendUpdate(1)
 })
 input.onPinPressed(TouchPin.P0, () => {
