@@ -88,9 +88,9 @@ input.onButtonPressed(Button.B, () => {
 input.onButtonPressed(Button.AB, () => {
     //on_state = 1
     //radio.sendString("On")
-    basic.showNumber(row)
-    basic.pause(200)
     basic.showNumber(col)
+    basic.pause(200)
+    basic.showNumber(row)
     basic.pause(200)
     sendUpdate(1)
 })
