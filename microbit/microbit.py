@@ -19,7 +19,7 @@
 # Change this flag if you want to use the system installed version.
 
 DEBUG = False
-USE_EMBEDDED_PYSERIAL = True
+USE_EMBEDDED_PYSERIAL = False
 BAUD = 115200
 
 if USE_EMBEDDED_PYSERIAL:

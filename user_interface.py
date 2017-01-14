@@ -43,7 +43,6 @@ class DummyMicrobit():
         microbit.send_message(message)
 
 
-
 #----- MESSAGE RECEPTION ------------------------------------------------------
 
 def poll_message(): #TESTED OK
@@ -57,25 +56,33 @@ def poll_message(): #TESTED OK
 def decode_and_handle(msg): # TESTED OK
     # First char is cmd, rest is data
     #TODO:parser exception
-    cmdchar = msg[0]
-    comma   = msg[1]
-    data    = msg[2:]
+    # First find what kind of message we have
+    if ":" in msg:
+        # We're dealing with the pxt 'data:value' pair
+        cmdchar = msg.split(":")[0]
+        data = msg.split(":")[1]
+    else:
+        cmdchar = msg[0]
+        comma   = msg[1]
+        data    = msg[2:]
+        if comma != ',':
+            print("warning: malformed message:%s" % msg)
+            return None
 
-    if comma != ',':
-        print("warning: malformed message:%s" % msg)
-        return None
-
-    if cmdchar == 'T': # timing change
+    if cmdchar == 'bpm': # timing change
         return handle_bpm_change(data)
 
-    elif cmdchar == 'S': # size change
-        return handle_size_change(data)
+    elif cmdchar == 'rows': # size change
+        return handle_rows_change(data)
+
+    elif cmdchar == 'cols': # size change
+        return handle_cols_change(data)
 
     elif cmdchar == 'C': # state change
         return handle_state_change(data)
 
     else:
-        print("warning: unknown command received:%s" % msg)
+        print("warning: unknown command received:%s" % cmdchar)
         return None
 
 def handle_bpm_change(msg): # TESTED OK
@@ -88,13 +95,25 @@ def handle_bpm_change(msg): # TESTED OK
 
     return ("BPM", bpm)
 
+def handle_cols_change(msg):
+    # change just the cols
+    #   (note, no ack)
+    cols = int(msg) #TODO: number format exception
+    return ("COLS", cols)
+
+def handle_rows_change(msg):
+    # change just the rows
+    #   (note, no ack)
+    rows = int(msg) #TODO: number format exception
+    return ("ROWS", rows)
+
 def handle_size_change(msg): # TESTED OK
     # size change handler
     #   [S,]NN,NN
     #   (note, no ack)
 
     fields = msg.split(',')
-    cols, rows = fields #TODO: number of params exception
+    rows, cols = fields #TODO: number of params exception
     cols = int(cols) #TODO: number format exception
     rows = int(rows) #TODO: number format exception
 
@@ -105,7 +124,7 @@ def handle_state_change(msg): # TESTED OK
     #   [C,]{0-8},{0-8},(1,0)
 
     fields = msg.split(',')
-    col, row, state = fields #TODO: number of params exception
+    row, col, state = fields #TODO: number of params exception
     #TODO: parse exception
     col   = int(col)
     row   = int(row)
@@ -127,7 +146,7 @@ def get_beat_command_msg(idx): # TESTED OK
 def get_ack_state_change_msg(col, row, state): # TESTED OK
     # form ack state change command
     #   A,NN,NN,N
-    return "A,%d,%d,%d" % (col, row, state)
+    return "A,%d,%d,%d" % (row, col, state)
 
 def send_msg(msg): # TESTED OK
     if msg[-1] != '\n':
