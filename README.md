@@ -20,8 +20,9 @@ Here's a video to help explain.
 [![Youtube video of the Tone Matrix](https://img.youtube.com/vi/nzg_t5WtEk4/0.jpg)](https://www.youtube.com/watch?v=nzg_t5WtEk4&feature=youtu.be&t=76)
 
 
-Each micro:bit represents a note in a song, and we arrange the micro:bits into rows and columns
-![The tone matrix](graphics/overview.svg)
+Each micro:bit represents a note in a song, and we arrange the micro:bits into rows and columns:
+
+![The tone matrix](graphics/overview.png)
 
 Rows represent pitch, from low pitch to high pitch
 Columns represent beats in a bar, (we have 8 beats in a bar here)
@@ -120,5 +121,7 @@ There are files for a physical display stand in the `graphics` directory. This h
 The SVGs were generated in Inkscape and you will need to use 'Outline' view mode to understand them properly (View-->Display Mode-->Outline).
 
 These laser cutter files are redistributeable under a CC-BY-SA 4.0 license. This license does not apply to the rest of the repository.
-Author: Jonathan Austin
+
 [![License: CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg)](http://creativecommons.org/licenses/by-sa/4.0/)
+Author: Jonathan Austin
+
