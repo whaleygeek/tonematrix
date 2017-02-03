@@ -113,3 +113,12 @@ Sometimes the 'ack' of the state change is not received by one of the micro:bits
 
 Sometimes the 'change state' command is not received by the Pi. Just press the button again!
 
+# Physical Display Stand
+
+There are files for a physical display stand in the `graphics` directory. This has ben designed to be cut out of two sheets of 600x400mm sheet of 3mm ply. 
+
+The SVGs were generated in Inkscape and you will need to use 'Outline' view mode to understand them properly (View-->Display Mode-->Outline).
+
+These laser cutter files are redistributeable under a CC-BY-SA 4.0 license. This license does not apply to the rest of the repository.
+Author: Jonathan Austin
+[![License: CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg)](http://creativecommons.org/licenses/by-sa/4.0/)
